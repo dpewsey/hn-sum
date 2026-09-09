@@ -1,5 +1,9 @@
 # hn-sum
 
+### simple project to test some things related to ai 
+
+worked 2nd attempt, with corrections having to over describe requirements to understand app goal
+
 Weekly Hacker News digest - fetches stories with 850+ points, summarises them
 via Cloudflare Workers AI (Llama 3.1 8B, free tier), and emails the digest.
 
