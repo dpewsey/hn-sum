@@ -13,7 +13,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 import requests
-from newspaper import Article
+from bs4 import BeautifulSoup
 
 # ---------------------------------------------------------------------------
 # Config
@@ -76,10 +76,14 @@ def extract_article_text(url, max_chars=3000):
     if not url:
         return ""
     try:
-        article = Article(url)
-        article.download()
-        article.parse()
-        return (article.text or "")[:max_chars]
+        resp = requests.get(url, timeout=15, headers={"User-Agent": "hn-sum/1.0"})
+        resp.raise_for_status()
+        soup = BeautifulSoup(resp.text, "html.parser")
+        # Remove scripts, styles, navs
+        for tag in soup(["script", "style", "nav", "header", "footer", "aside"]):
+            tag.decompose()
+        text = soup.get_text(separator=" ", strip=True)
+        return text[:max_chars]
     except Exception:
         return ""
 
